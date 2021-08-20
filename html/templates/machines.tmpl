@@ -1,0 +1,45 @@
+{{ define "machines.tmpl" }}
+{{ template "header.tmpl" . }}
+
+  <main>
+    <body>
+      <section>
+        <div class="container">
+          <div class="row">
+            {{ range $key, $value := .machines }}
+            <div class="col-md-4 mt-4 d-flex">
+              {{ if $value.FeaturesId.Valid }}
+              <div class="card pinball-machine" style="border-color: {{ $value.FeaturesId | getMachineFeatureColor }}">
+              {{ else }}
+              <div class="card pinball-machine">
+              {{ end }}
+                <div class="card-img-block">
+                  {{ if $value.FeaturesId.Valid }}
+                    <span class="card-type" style="background-color: {{ $value.FeaturesId | getMachineFeatureColor }}">{{ $value.FeaturesId | getMachineFeatures }}</span>
+                  {{ end }}
+                  {{ if $value.ManufactureDate.Valid }}
+                  <span class="card-year">{{ $value.ManufactureDate | getMachineYear }}</span>
+                  {{ end }}
+                  <img class="card-img-top" src="{{ $value.BackglassImageUuid | getMachineImageURL }}" alt="{{ $value.Name | getMachineName }} Backglass">
+                </div>
+                <div class="card-body pt-0">
+                  <h5 class="card-title">{{ $value.Name | getMachineName }}</h5>
+                </div>
+                <div class="card-buttons">
+                  <a href="http://pintips.net/opdb/{{ $value.OpdbId }}" target="_blank" rel="noopener noreferrer"><button type="button" class="btn btn-sm btn-outline-secondary">PinTips</button></a>
+                  <a href="https://opdb.org/search?q={{ $value.OpdbId }}" target="_blank" rel="noopener noreferrer"><button type="button" class="btn btn-sm btn-outline-secondary">OPDB</button></a>
+                  {{ if $value.IpdbId.Valid }}
+                  <a href="http://ipdb.org/machine.cgi?id={{ $value.IpdbId.Int64 }}" target="_blank" rel="noopener noreferrer"><button type="button" class="btn btn-sm btn-outline-secondary">IPDB</button></a>
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+      </section>
+    </body>
+  </main>
+
+{{ template "footer.tmpl" . }}
+{{ end }}
